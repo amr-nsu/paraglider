@@ -43,7 +43,9 @@ Src/main.o: ../Src/main.c \
  /home/rost/Studying/Diplom/Program\ support/paraglider.git/trunk/epifanov/paraglider/Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h \
  /home/rost/Studying/Diplom/Program\ support/paraglider.git/trunk/epifanov/paraglider/Middlewares/Third_Party/FreeRTOS/Source/include/queue.h \
  /home/rost/Studying/Diplom/Program\ support/paraglider.git/trunk/epifanov/paraglider/Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h \
- /home/rost/Studying/Diplom/Program\ support/paraglider.git/trunk/epifanov/paraglider/Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
+ /home/rost/Studying/Diplom/Program\ support/paraglider.git/trunk/epifanov/paraglider/Middlewares/Third_Party/FreeRTOS/Source/include/timers.h \
+ /home/rost/Studying/Diplom/Program\ support/paraglider.git/trunk/epifanov/paraglider/Inc/processes.h \
+ /home/rost/Studying/Diplom/Program\ support/paraglider.git/trunk/epifanov/paraglider/Inc/gy86.h
 
 /home/rost/Studying/Diplom/Program\ support/paraglider.git/trunk/epifanov/paraglider/Inc/main.h:
 
@@ -134,3 +136,7 @@ Src/main.o: ../Src/main.c \
 /home/rost/Studying/Diplom/Program\ support/paraglider.git/trunk/epifanov/paraglider/Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h:
 
 /home/rost/Studying/Diplom/Program\ support/paraglider.git/trunk/epifanov/paraglider/Middlewares/Third_Party/FreeRTOS/Source/include/timers.h:
+
+/home/rost/Studying/Diplom/Program\ support/paraglider.git/trunk/epifanov/paraglider/Inc/processes.h:
+
+/home/rost/Studying/Diplom/Program\ support/paraglider.git/trunk/epifanov/paraglider/Inc/gy86.h:

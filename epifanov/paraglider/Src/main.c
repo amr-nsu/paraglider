@@ -49,6 +49,7 @@
 #include "main.h"
 #include "stm32f1xx_hal.h"
 #include "cmsis_os.h"
+#include "processes.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -68,9 +69,17 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart1_tx;
-DMA_HandleTypeDef hdma_usart3_rx;
+DMA_HandleTypeDef hdma_usart3_tx;
 
-osThreadId defaultTaskHandle;
+uint8_t data[14];
+uint8_t bufferRemoteControl[25];
+uint16_t channels[16];
+
+osThreadId tempretureSensorTaskHandle;
+osThreadId computerTransmitterTaskHandle;
+osThreadId remoteControlReceiverTaskHandle;
+osThreadId PWMManagerTaskHandle;
+
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -108,7 +117,8 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+  data[0] = 0x0F;
+  data[13] = 0x00;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -138,6 +148,16 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
+ // wake_MPU6050(&hi2c1);
+
+//  HAL_Delay(5);
+//	float tempreture;
+//	while(1)
+//	{
+//	read_temperature_MPU6050(&hi2c1, &tempreture);
+//	  HAL_Delay(50);
+//
+//	}
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -151,36 +171,27 @@ int main(void)
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
+  /* USER CODE BEGIN RTOS_QUEUES */
+  /* USER CODE END RTOS_QUEUES */
+
+
   /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
-  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+  osThreadDef(temreture, TempretureSensorTask, osPriorityNormal, 0, 128);
+  tempretureSensorTaskHandle = osThreadCreate(osThread(temreture), NULL);
+
+  osThreadDef(computerTransmitter, ComputerTransmitterTask, osPriorityNormal, 0, 128);
+  computerTransmitterTaskHandle = osThreadCreate(osThread(computerTransmitter), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
-
-  /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
-  /* USER CODE END RTOS_QUEUES */
- 
 
   /* Start scheduler */
   osKernelStart();
   
   /* We should never get here as control is now taken by the scheduler */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-
-  /* USER CODE END WHILE */
-
-  /* USER CODE BEGIN 3 */
-
-  }
-  /* USER CODE END 3 */
+  while (1) { }
 
 }
 
@@ -301,7 +312,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 0;
+  htim2.Init.Period = 59199 + 400;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
@@ -344,10 +355,10 @@ static void MX_USART1_UART_Init(void)
 {
 
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.BaudRate = 100000;
+  huart1.Init.WordLength = UART_WORDLENGTH_9B;
+  huart1.Init.StopBits = UART_STOPBITS_2;
+  huart1.Init.Parity = UART_PARITY_EVEN;
   huart1.Init.Mode = UART_MODE_TX_RX;
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
@@ -442,14 +453,16 @@ static void MX_GPIO_Init(void)
 /* StartDefaultTask function */
 void StartDefaultTask(void const * argument)
 {
-
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END 5 */ 
+	wake_MPU6050(&hi2c1);
+	float tempreture;
+	//uint16_t temp;
+	for(;;)
+	{
+		read_temperature_MPU6050(&hi2c1, &tempreture);
+		//temp = (uint16_t)(tempreture * 100);
+		//((float*)data)[0] = tempreture;
+		taskYIELD();
+	}
 }
 
 /**

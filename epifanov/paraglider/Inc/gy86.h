@@ -16,32 +16,32 @@
  */
 
 //D2 - temperature, D1 - pressure
-const uint8_t ADDRESS_MS5611 = 0x77 << 1;
-const uint8_t ADCREAD_MS5611 = 0x00;
-const uint8_t RESET_MS5611 = 0x1E;
-const uint8_t D1_256_MS5611 = 0x40;
-const uint8_t D1_512_MS5611 = 0x42;
-const uint8_t D1_1024_MS5611 = 0x44;
-const uint8_t D1_2048_MS5611 = 0x46;
-const uint8_t D1_4096_MS5611 = 0x48;
-const uint8_t D2_256_MS5611 = 0x50;
-const uint8_t D2_512_MS5611 = 0x52;
-const uint8_t D2_1024_MS5611 = 0x54;
-const uint8_t D2_2048_MS5611 = 0x56;
-const uint8_t D2_4096_MS5611 = 0x58;
-const uint8_t PROM_READ_C1_MS5611 = 0xA2;
-const uint8_t PROM_READ_C2_MS5611 = 0xA4;
-const uint8_t PROM_READ_C3_MS5611 = 0xA6;
-const uint8_t PROM_READ_C4_MS5611 = 0xA8;
-const uint8_t PROM_READ_C5_MS5611 = 0xAA;
-const uint8_t PROM_READ_C6_MS5611 = 0xAC;
+const uint8_t ADDRESS_MS5611;
+const uint8_t ADCREAD_MS5611;
+const uint8_t RESET_MS5611;
+const uint8_t D1_256_MS5611;
+const uint8_t D1_512_MS5611;
+const uint8_t D1_1024_MS5611;
+const uint8_t D1_2048_MS5611;
+const uint8_t D1_4096_MS5611;
+const uint8_t D2_256_MS5611;
+const uint8_t D2_512_MS5611;
+const uint8_t D2_1024_MS5611;
+const uint8_t D2_2048_MS5611;
+const uint8_t D2_4096_MS5611;
+const uint8_t PROM_READ_C1_MS5611;
+const uint8_t PROM_READ_C2_MS5611;
+const uint8_t PROM_READ_C3_MS5611;
+const uint8_t PROM_READ_C4_MS5611;
+const uint8_t PROM_READ_C5_MS5611;
+const uint8_t PROM_READ_C6_MS5611;
 
 /*!
  * \brief Проверяет готовность к работе MS5611
  * \param I2C_HandleTypeDef* адресс шины
  * \return статус операции
  */
-HAL_StatusTypeDef check_MS5611(I2C_HandleTypeDef* hi2c1);
+void check_MS5611(I2C_HandleTypeDef* hi2c1);
 
 /*!
  * \brief Читает PROM память MS5611
@@ -50,7 +50,7 @@ HAL_StatusTypeDef check_MS5611(I2C_HandleTypeDef* hi2c1);
  * \param coef массив для возврата коэффицентов
  * \return статус операции
  */
-HAL_StatusTypeDef read_PROM_MS5611(I2C_HandleTypeDef* hi2c1, uint16_t* coef);
+void read_PROM_MS5611(I2C_HandleTypeDef* hi2c1, uint16_t* coef);
 
 /*!
  * \brief Устанавливает OSR MS5611
@@ -58,7 +58,7 @@ HAL_StatusTypeDef read_PROM_MS5611(I2C_HandleTypeDef* hi2c1, uint16_t* coef);
  * \param OSR адресс операции
  * \return статус операции
  */
-HAL_StatusTypeDef set_OSR_MS5611(I2C_HandleTypeDef* hi2c1, uint8_t* OSR);
+void set_OSR_MS5611(I2C_HandleTypeDef* hi2c1, uint8_t* OSR);
 
 /*!
  * \brief Читает данные с датчика MS5611
@@ -66,42 +66,41 @@ HAL_StatusTypeDef set_OSR_MS5611(I2C_HandleTypeDef* hi2c1, uint8_t* OSR);
  * \param data массив для возврата данных
  * \return статус операции
  */
-HAL_StatusTypeDef read_ADC_MS5611(I2C_HandleTypeDef* hi2c1, uint32_t* data);
+void read_ADC_MS5611(I2C_HandleTypeDef* hi2c1, uint32_t* data);
 
-
-const uint8_t ADDRESS_MPU6050 = 0x68 << 1;
-const uint8_t SMPLRT_DIV_MPU6050 = 0x19;
-const uint8_t CONFIG_MPU6050 = 0x1A;
-const uint8_t GYRO_CONFIG_MPU6050 = 0x1B;
-const uint8_t ACCEL_CONFIG_MPU6050 = 0x1C;
-const uint8_t MOTION_THRESH_MPU6050 = 0x1F;
-const uint8_t INT_PIN_CFG_MPU6050 = 0x37;
-const uint8_t INT_ENABLE_MPU6050 = 0x38;
-const uint8_t INT_STATUS_MPU6050 = 0x3A;
-const uint8_t ACCEL_XOUT_H_MPU6050 = 0x3B;
-const uint8_t ACCEL_XOUT_L_MPU6050 = 0x3C;
-const uint8_t ACCEL_YOUT_H_MPU6050 = 0x3D;
-const uint8_t ACCEL_YOUT_L_MPU6050 = 0x3E;
-const uint8_t ACCEL_ZOUT_H_MPU6050 = 0x3F;
-const uint8_t ACCEL_ZOUT_L_MPU6050 = 0x40;
-const uint8_t TEMP_OUT_H_MPU6050 = 0x41;
-const uint8_t TEMP_OUT_L_MPU6050 = 0x42;
-const uint8_t GYRO_XOUT_H_MPU6050 = 0x43;
-const uint8_t GYRO_XOUT_L_MPU6050 = 0x44;
-const uint8_t GYRO_YOUT_H_MPU6050 = 0x45;
-const uint8_t GYRO_YOUT_L_MPU6050 = 0x46;
-const uint8_t GYRO_ZOUT_H_MPU6050 = 0x47;
-const uint8_t GYRO_ZOUT_L_MPU6050 = 0x48;
-const uint8_t MOT_DETECT_STATUS_MPU6050 = 0x61;
-const uint8_t SIGNAL_PATH_RESET_MPU6050 = 0x68;
-const uint8_t MOT_DETECT_CTRL_MPU6050 = 0x69;
-const uint8_t USER_CTRL_MPU6050 = 0x6A;
-const uint8_t PWR_MGMT_1_MPU6050 = 0x6B;
-const uint8_t PWR_MGMT_2_MPU6050 = 0x6C;
-const uint8_t FIFO_COUNTH_MPU6050 = 0x72;
-const uint8_t FIFO_COUNTL_MPU6050 = 0x73;
-const uint8_t FIFO_R_W_MPU6050 = 0x74;
-const uint8_t WHO_AM_I_MPU6050 = 0x75;
+const uint8_t ADDRESS_MPU6050;
+const uint8_t SMPLRT_DIV_MPU6050;
+const uint8_t CONFIG_MPU6050;
+const uint8_t GYRO_CONFIG_MPU6050;
+const uint8_t ACCEL_CONFIG_MPU6050;
+const uint8_t MOTION_THRESH_MPU6050;
+const uint8_t INT_PIN_CFG_MPU6050;
+const uint8_t INT_ENABLE_MPU6050;
+const uint8_t INT_STATUS_MPU6050;
+const uint8_t ACCEL_XOUT_H_MPU6050;
+const uint8_t ACCEL_XOUT_L_MPU6050;
+const uint8_t ACCEL_YOUT_H_MPU6050;
+const uint8_t ACCEL_YOUT_L_MPU6050;
+const uint8_t ACCEL_ZOUT_H_MPU6050;
+const uint8_t ACCEL_ZOUT_L_MPU6050;
+const uint8_t TEMP_OUT_H_MPU6050;
+const uint8_t TEMP_OUT_L_MPU6050;
+const uint8_t GYRO_XOUT_H_MPU6050;
+const uint8_t GYRO_XOUT_L_MPU6050;
+const uint8_t GYRO_YOUT_H_MPU6050;
+const uint8_t GYRO_YOUT_L_MPU6050;
+const uint8_t GYRO_ZOUT_H_MPU6050;
+const uint8_t GYRO_ZOUT_L_MPU6050;
+const uint8_t MOT_DETECT_STATUS_MPU6050;
+const uint8_t SIGNAL_PATH_RESET_MPU6050;
+const uint8_t MOT_DETECT_CTRL_MPU6050;
+const uint8_t USER_CTRL_MPU6050;
+const uint8_t PWR_MGMT_1_MPU6050;
+const uint8_t PWR_MGMT_2_MPU6050;
+const uint8_t FIFO_COUNTH_MPU6050;
+const uint8_t FIFO_COUNTL_MPU6050;
+const uint8_t FIFO_R_W_MPU6050;
+const uint8_t WHO_AM_I_MPU6050;
 
 /*!
  * \brief Меняет режим питания MPU6050
@@ -109,7 +108,7 @@ const uint8_t WHO_AM_I_MPU6050 = 0x75;
  * \param I2C_HandleTypeDef* адресс шины
  * \return статус операции
  */
-HAL_StatusTypeDef wake_MPU6050(I2C_HandleTypeDef* hi2c1);
+void wake_MPU6050(I2C_HandleTypeDef* hi2c1);
 
 /*!
  * \brief Устанавливает значение сэмплирования гироскопа MPU6050
@@ -126,7 +125,7 @@ HAL_StatusTypeDef wake_MPU6050(I2C_HandleTypeDef* hi2c1);
  * \param uint8_t значение сэмплирования
  * \return статус операции
  */
-HAL_StatusTypeDef set_gyroscope_rate_sampling_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t rate);
+void set_gyroscope_rate_sampling_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t rate);
 
 /*!
  * \brief Устанавливает значение диапазона гироскоп MPU6050
@@ -139,7 +138,7 @@ HAL_StatusTypeDef set_gyroscope_rate_sampling_MPU6050(I2C_HandleTypeDef* hi2c1, 
  * \param sensity значение чувствительности
  * \return статус операции
  */
-HAL_StatusTypeDef set_gyroscope_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t sensity);
+void set_gyroscope_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t sensity);
 
 /*!
  * \brief Устанавливает значение диапазона акселерометра MPU6050
@@ -152,7 +151,7 @@ HAL_StatusTypeDef set_gyroscope_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t sensit
  * \param sensity значение чувствительности
  * \return статус операции
  */
-HAL_StatusTypeDef set_accelerometer_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t sensity);
+void set_accelerometer_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t sensity);
 
 /*!
  * \brief Возвращает значение акселерометра MPU6050
@@ -161,7 +160,7 @@ HAL_StatusTypeDef set_accelerometer_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t se
  * \param gyro массив для возврата данных с акселерометра
  * \return статус операции
  */
-HAL_StatusTypeDef read_accelerometer_MPU6050(I2C_HandleTypeDef* hi2c1, int16_t* acc);
+void read_accelerometer_MPU6050(I2C_HandleTypeDef* hi2c1, int16_t* acc);
 
 /*!
  * \brief Возвращает значение гироскопа MPU6050
@@ -170,7 +169,7 @@ HAL_StatusTypeDef read_accelerometer_MPU6050(I2C_HandleTypeDef* hi2c1, int16_t* 
  * \param gyro массив для возврата данных с гироскопа
  * \return статус операции
  */
-HAL_StatusTypeDef read_gyroscope_MPU6050(I2C_HandleTypeDef* hi2c1, int16_t* gyro);
+void read_gyroscope_MPU6050(I2C_HandleTypeDef* hi2c1, int16_t* gyro);
 
 /*!
  * \brief Возвращает значение температуры MPU6050
@@ -179,7 +178,7 @@ HAL_StatusTypeDef read_gyroscope_MPU6050(I2C_HandleTypeDef* hi2c1, int16_t* gyro
  * \param float массив для возврата температуры
  * \return статус операции
  */
-HAL_StatusTypeDef read_temperature_MPU6050(I2C_HandleTypeDef* hi2c1, float* data);
+void read_temperature_MPU6050(I2C_HandleTypeDef* hi2c1, float* data);
 
 
 //not properly written function
@@ -188,14 +187,14 @@ HAL_StatusTypeDef read_temperature_MPU6050(I2C_HandleTypeDef* hi2c1, float* data
  * \param I2C_HandleTypeDef* адресс шины
  * \return статус операции
  */
-HAL_StatusTypeDef enable_interrupts_MPU6050(I2C_HandleTypeDef* hi2c1);
+void enable_interrupts_MPU6050(I2C_HandleTypeDef* hi2c1);
 
 /*!
  * \brief Блокировка прерываний MPU6050
  * \param I2C_HandleTypeDef* адресс шины
  * \return статус операции
  */
-HAL_StatusTypeDef disable_interrupts_MPU6050(I2C_HandleTypeDef* hi2c1);
+void disable_interrupts_MPU6050(I2C_HandleTypeDef* hi2c1);
 
 /*!
  * \brief Чтение прерываний MPU6050
@@ -203,20 +202,39 @@ HAL_StatusTypeDef disable_interrupts_MPU6050(I2C_HandleTypeDef* hi2c1);
  * \param read массив для возврата прерывания
  * \return статус операции
  */
-HAL_StatusTypeDef read_interrupts_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t* read);
+void read_interrupts_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t* read);
 //undefined behaviour
 
-const uint8_t ADDRESS_HMC5883L = 0x77 << 1;
+const uint8_t ADDRESS_HMC5883L;
+const uint8_t CONF_A_HMC5883L;
+const uint8_t CONF_B_HMC5883L;
+const uint8_t MODE_HMC5883L;
+const uint8_t MAG_XOUT_H_HMC5883L;
+const uint8_t MAG_XOUT_L_HMC5883L;
+const uint8_t MAG_YOUT_H_HMC5883L;
+const uint8_t MAG_YOUT_L_HMC5883L;
+const uint8_t MAG_ZOUT_H_HMC5883L;
+const uint8_t MAG_ZOUT_L_HMC5883L;
+const uint8_t STATUS_HMC5883L;
+const uint8_t IDENTIFICATION_A;
+const uint8_t IDENTIFICATION_B;
+const uint8_t IDENTIFICATION_C;
 
+//0 0 0 0.75
+//0 0 1 1.5
+//0 1 0 3
+//0 1 1 7.5
+//1 0 0 15 (Default)
+//1 0 1 30
+//1 1 0 75
+void set_data_output_rate_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t rate);
 
+void set_data_output_range_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t rate);
+
+void set_operating_mode_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t rate);
+
+void read_data_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t* data);
+
+void read_status_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t* status);
 
 #endif /* __GY86_H__ */
-
-
-
-
-
-
-
-
-

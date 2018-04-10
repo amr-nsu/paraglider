@@ -7,31 +7,31 @@ C_SRCS += \
 ../Src/freertos.c \
 ../Src/gy86.c \
 ../Src/main.c \
+../Src/processes.c \
 ../Src/stm32f1xx_hal_msp.c \
 ../Src/stm32f1xx_hal_timebase_TIM.c \
 ../Src/stm32f1xx_it.c \
-../Src/system_stm32f1xx.c \
-../Src/tasks.c 
+../Src/system_stm32f1xx.c 
 
 OBJS += \
 ./Src/freertos.o \
 ./Src/gy86.o \
 ./Src/main.o \
+./Src/processes.o \
 ./Src/stm32f1xx_hal_msp.o \
 ./Src/stm32f1xx_hal_timebase_TIM.o \
 ./Src/stm32f1xx_it.o \
-./Src/system_stm32f1xx.o \
-./Src/tasks.o 
+./Src/system_stm32f1xx.o 
 
 C_DEPS += \
 ./Src/freertos.d \
 ./Src/gy86.d \
 ./Src/main.d \
+./Src/processes.d \
 ./Src/stm32f1xx_hal_msp.d \
 ./Src/stm32f1xx_hal_timebase_TIM.d \
 ./Src/stm32f1xx_it.d \
-./Src/system_stm32f1xx.d \
-./Src/tasks.d 
+./Src/system_stm32f1xx.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
