@@ -14,8 +14,10 @@ extern TIM_HandleTypeDef htim2;
 
 extern uint8_t bufferRemoteControl[25];
 extern uint16_t channels[16];
-extern uint8_t data[14];
+extern uint8_t data[50];
+extern uint16_t ADCData[3];
 
+void SensorTask(void * args);
 
 void TempretureSensorTask(void * args);
 
@@ -25,6 +27,7 @@ void RemoteControlReceiverTask(void * args);
 
 void PWMManagerTask(void * args);
 
+void ADCManagerTask(void * args);
 
 
 #endif /* PROCESSES_H */

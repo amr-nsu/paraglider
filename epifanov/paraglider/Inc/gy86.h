@@ -36,6 +36,8 @@ const uint8_t PROM_READ_C4_MS5611;
 const uint8_t PROM_READ_C5_MS5611;
 const uint8_t PROM_READ_C6_MS5611;
 
+void congifurate_MS5611(I2C_HandleTypeDef* hi2c1);
+
 /*!
  * \brief Проверяет готовность к работе MS5611
  * \param I2C_HandleTypeDef* адресс шины
@@ -58,7 +60,7 @@ void read_PROM_MS5611(I2C_HandleTypeDef* hi2c1, uint16_t* coef);
  * \param OSR адресс операции
  * \return статус операции
  */
-void set_OSR_MS5611(I2C_HandleTypeDef* hi2c1, uint8_t* OSR);
+void set_OSR_MS5611(I2C_HandleTypeDef* hi2c1, uint8_t OSR);
 
 /*!
  * \brief Читает данные с датчика MS5611
@@ -102,6 +104,9 @@ const uint8_t FIFO_COUNTL_MPU6050;
 const uint8_t FIFO_R_W_MPU6050;
 const uint8_t WHO_AM_I_MPU6050;
 
+void congifurate_MPU6050(I2C_HandleTypeDef* hi2c1);
+
+
 /*!
  * \brief Меняет режим питания MPU6050
  * \note See register 0x6B
@@ -113,14 +118,14 @@ void wake_MPU6050(I2C_HandleTypeDef* hi2c1);
 /*!
  * \brief Устанавливает значение сэмплирования гироскопа MPU6050
  * \note See register 0x19
- *       Sample rate set to 8 kHz 0
- *       Sample rate set to 4 kHz 1
- *       Sample rate set to 2 kHz 3
- *       Sample rate set to 1 kHz 7
- *       Sample rate set to 500 Hz 15
- *       Sample rate set to 250 Hz 31
- *       Sample rate set to 125 Hz 63
- *       Sample rate set to 100 Hz 79
+ *       0x00 - 8 kHz
+ *       0x01 - 4 kHz
+ *       0x03 - 2 kHz
+ *       0x07 - 1 kHz
+ *       0x0F - 500 Hz
+ *       0x1F - 250 Hz
+ *       0x3F - 125 Hz
+ *       0x4F - 100 Hz
  * \param I2C_HandleTypeDef* адресс шины
  * \param uint8_t значение сэмплирования
  * \return статус операции
@@ -130,10 +135,10 @@ void set_gyroscope_rate_sampling_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t rate)
 /*!
  * \brief Устанавливает значение диапазона гироскоп MPU6050
  * \note See register 0x1B
- *       Range is +- 250 degrees/s 0x00
- *       Range is +- 500 degrees/s 0x01
- *       Range is +- 1000 degrees/s 0x02
- *       Range is +- 2000 degrees/s 0x03
+ *       0x00 - +- 250 degrees/s
+ *       0x01 - +- 500 degrees/s
+ *       0x02 - +- 1000 degrees/s
+ *       0x03 - +- 2000 degrees/s
  * \param I2C_HandleTypeDef* адресс шины
  * \param sensity значение чувствительности
  * \return статус операции
@@ -143,10 +148,10 @@ void set_gyroscope_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t sensity);
 /*!
  * \brief Устанавливает значение диапазона акселерометра MPU6050
  * \note See register 0x1C
- *       Range is +- 2G 0x00
- *       Range is +- 4G 0x01
- *       Range is +- 8G 0x02
- *       Range is +- 16G 0x03
+ *      0x00 - +- 2G
+ *      0x01 - +- 4G
+ *      0x02 - +- 8G
+ *      0x03 - +- 16G
  * \param I2C_HandleTypeDef* адресс шины
  * \param sensity значение чувствительности
  * \return статус операции
@@ -220,18 +225,57 @@ const uint8_t IDENTIFICATION_A;
 const uint8_t IDENTIFICATION_B;
 const uint8_t IDENTIFICATION_C;
 
-//0 0 0 0.75
-//0 0 1 1.5
-//0 1 0 3
-//0 1 1 7.5
-//1 0 0 15 (Default)
-//1 0 1 30
-//1 1 0 75
+void congifurate_HMC5883L(I2C_HandleTypeDef* hi2c1);
+
+/*!
+ * \brief Установка скорости измерений HMC5883L
+ * \note see register A
+ *	0x00 - 0.75 Hz
+ *	0x01 1.5 Hz
+ *	0x02 3 Hz
+ *	0x03 7.5 Hz
+ *	0x04 15 (Default) Hz
+ *	0x05 30 Hz
+ *	0x06 75 Hz
+ *	0x07 Reserved
+ * \param I2C_HandleTypeDef* адресс шины
+ * \param rate диапазон значений
+ * \return статус операции
+ */
 void set_data_output_rate_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t rate);
 
-void set_data_output_range_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t rate);
+/*!
+ * \brief Установка диапазона измерений HMC5883L
+ * \note see register B
+ *	      Recommended Gain    Digital      Output Range
+ *	      Sensor      (LSb/   Resolution
+ *	      Field       Gauss)  (mG/LSb)
+ * 0x00 - ± 0.88 Ga   1370    0.73         0xF800–0x07FF (-2048–2047 )
+ * 0x01 - ± 1.3 Ga    1090(d) 0.92         0xF800–0x07FF (-2048–2047 )
+ * 0x02 - ± 1.9 Ga    820     1.22         0xF800–0x07FF (-2048–2047 )
+ * 0x03 - ± 2.5 Ga    660     1.52         0xF800–0x07FF (-2048–2047 )
+ * 0x04 - ± 4.0 Ga    440     2.27         0xF800–0x07FF (-2048–2047 )
+ * 0x05 - ± 4.7 Ga    390     2.56         0xF800–0x07FF (-2048–2047 )
+ * 0x06 - ± 5.6 Ga    330     3.03         0xF800–0x07FF (-2048–2047 )
+ * 0x07 - ± 8.1 Ga    230     4.35         0xF800–0x07FF (-2048–2047 )
+ * \param I2C_HandleTypeDef* адресс шины
+ * \param mode режим операции
+ * \return статус операции
+ */
+void set_data_output_range_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t range);
 
-void set_operating_mode_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t rate);
+/*!
+ * \brief Установка режима измерений HMC5883L
+ * \note see register A
+ *	0x00 - Continuous-Measurement Mode
+ *	0x01 - Single-Measurement Mode (Default)
+ *	0x10 - Idle Mode. Device is placed in idle mode.
+ *	0x11 - Idle Mode. Device is placed in idle mode.
+ * \param I2C_HandleTypeDef* адресс шины
+ * \param mode режим операции
+ * \return статус операции
+ */
+void set_operating_mode_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t mode);
 
 void read_data_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t* data);
 

@@ -71,14 +71,18 @@ DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart3_tx;
 
-uint8_t data[14];
+uint8_t data[50];
 uint8_t bufferRemoteControl[25];
 uint16_t channels[16];
+uint16_t ADCData[3];
 
 osThreadId tempretureSensorTaskHandle;
 osThreadId computerTransmitterTaskHandle;
 osThreadId remoteControlReceiverTaskHandle;
 osThreadId PWMManagerTaskHandle;
+osThreadId ADCManagerTaskHandle;
+osThreadId sensorTaskHandle;
+
 
 
 /* USER CODE BEGIN PV */
@@ -95,7 +99,6 @@ static void MX_USART1_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_ADC1_Init(void);
-void StartDefaultTask(void const * argument);
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
                                 
@@ -118,7 +121,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
   data[0] = 0x0F;
-  data[13] = 0x00;
+  data[49] = 0x00;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -145,9 +148,8 @@ int main(void)
   MX_USART3_UART_Init();
   MX_TIM2_Init();
   MX_ADC1_Init();
-  /* USER CODE BEGIN 2 */
 
-  /* USER CODE END 2 */
+
  // wake_MPU6050(&hi2c1);
 
 //  HAL_Delay(5);
@@ -176,11 +178,23 @@ int main(void)
 
 
   /* Create the thread(s) */
-  osThreadDef(temreture, TempretureSensorTask, osPriorityNormal, 0, 128);
-  tempretureSensorTaskHandle = osThreadCreate(osThread(temreture), NULL);
+//  osThreadDef(temreture, TempretureSensorTask, osPriorityNormal, 0, 128);
+//  tempretureSensorTaskHandle = osThreadCreate(osThread(temreture), NULL);
 
   osThreadDef(computerTransmitter, ComputerTransmitterTask, osPriorityNormal, 0, 128);
   computerTransmitterTaskHandle = osThreadCreate(osThread(computerTransmitter), NULL);
+//
+//  osThreadDef(PWMGenerator, PWMManagerTask, osPriorityNormal, 0, 10);
+//  PWMManagerTaskHandle = osThreadCreate(osThread(PWMGenerator), NULL);
+//
+//  osThreadDef(remoteControlReceiver, RemoteControlReceiverTask, osPriorityNormal, 0, 26);
+//  remoteControlReceiverTaskHandle = osThreadCreate(osThread(remoteControlReceiver), NULL);
+//
+//  osThreadDef(ADCConvertor, ADCManagerTask, osPriorityNormal, 0, 1);
+//  ADCManagerTaskHandle = osThreadCreate(osThread(ADCConvertor), NULL);
+
+  osThreadDef(Sensors, SensorTask, osPriorityNormal, 0, 128);
+  sensorTaskHandle = osThreadCreate(osThread(Sensors), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -259,12 +273,12 @@ static void MX_ADC1_Init(void)
     /**Common config 
     */
   hadc1.Instance = ADC1;
-  hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
-  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
+  hadc1.Init.ContinuousConvMode = ENABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.NbrOfConversion = 3;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
@@ -274,6 +288,22 @@ static void MX_ADC1_Init(void)
     */
   sConfig.Channel = ADC_CHANNEL_3;
   sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  sConfig.Channel = ADC_CHANNEL_4;
+  sConfig.Rank = ADC_REGULAR_RANK_2;
+  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  sConfig.Channel = ADC_CHANNEL_5;
+  sConfig.Rank = ADC_REGULAR_RANK_3;
   sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -310,7 +340,7 @@ static void MX_TIM2_Init(void)
   TIM_OC_InitTypeDef sConfigOC;
 
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
+  htim2.Init.Prescaler = 1;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 59199 + 400;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -444,25 +474,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-}
-
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
-
-/* StartDefaultTask function */
-void StartDefaultTask(void const * argument)
-{
-	wake_MPU6050(&hi2c1);
-	float tempreture;
-	//uint16_t temp;
-	for(;;)
-	{
-		read_temperature_MPU6050(&hi2c1, &tempreture);
-		//temp = (uint16_t)(tempreture * 100);
-		//((float*)data)[0] = tempreture;
-		taskYIELD();
-	}
 }
 
 /**

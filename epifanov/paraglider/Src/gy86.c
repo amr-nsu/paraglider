@@ -54,7 +54,7 @@ const uint8_t FIFO_COUNTL_MPU6050 = 0x73;
 const uint8_t FIFO_R_W_MPU6050 = 0x74;
 const uint8_t WHO_AM_I_MPU6050 = 0x75;
 
-const uint8_t ADDRESS_HMC5883L = 0x1E << 1;
+const uint8_t ADDRESS_HMC5883L = 0xE8 << 1;
 const uint8_t CONF_A_HMC5883L = 0x00;
 const uint8_t CONF_B_HMC5883L = 0x01;
 const uint8_t MODE_HMC5883L = 0x02;
@@ -69,44 +69,53 @@ const uint8_t IDENTIFICATION_A = 0x0A;
 const uint8_t IDENTIFICATION_B = 0x0B;
 const uint8_t IDENTIFICATION_C = 0x0C;
 
+const uint8_t operation_time = 25;
+
+void congifurate_MS5611(I2C_HandleTypeDef* hi2c1)
+{
+	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &RESET_MS5611, 1, operation_time)!= HAL_OK);
+	set_OSR_MS5611(hi2c1, D1_4096_MS5611);
+}
+
+
 void check_MS5611(I2C_HandleTypeDef* hi2c1)
 {
-	while (HAL_I2C_IsDeviceReady(hi2c1, ADDRESS_MS5611, 5, 100) != HAL_OK);
+	while (HAL_I2C_IsDeviceReady(hi2c1, ADDRESS_MS5611, 5, operation_time) != HAL_OK);
 }
 
 void read_PROM_MS5611(I2C_HandleTypeDef* hi2c1, uint16_t* coef)
 {
 	uint8_t prom[2];
 
-	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &PROM_READ_C1_MS5611, 1, 100) != HAL_OK);
-	while (HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, prom, 2, 100) != HAL_OK);
+	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &PROM_READ_C1_MS5611, 1, operation_time) != HAL_OK);
+	while (HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, prom, 2, operation_time) != HAL_OK);
 	coef[0] = (prom[0] << 8 | prom[1] ) & 0xFFFF;
 
-	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &PROM_READ_C2_MS5611, 1, 100) != HAL_OK);
-	while (HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, prom, 2, 100) != HAL_OK);
+	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &PROM_READ_C2_MS5611, 1, operation_time) != HAL_OK);
+	while (HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, prom, 2, operation_time) != HAL_OK);
 	coef[1] = (prom[0] << 8 | prom[1] ) & 0xFFFF;
 
-	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &PROM_READ_C3_MS5611, 1, 100) != HAL_OK);
-	while (HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, prom, 2, 100) != HAL_OK);
+	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &PROM_READ_C3_MS5611, 1, operation_time) != HAL_OK);
+	while (HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, prom, 2, operation_time) != HAL_OK);
 	coef[2] = (prom[0] << 8 | prom[1] ) & 0xFFFF;
 
-	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &PROM_READ_C4_MS5611, 1, 100) != HAL_OK);
-	while (HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, prom, 2, 100) != HAL_OK);
+	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &PROM_READ_C4_MS5611, 1, operation_time) != HAL_OK);
+	while (HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, prom, 2, operation_time) != HAL_OK);
 	coef[3] = (prom[0] << 8 | prom[1] ) & 0xFFFF;
 
-	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &PROM_READ_C5_MS5611, 1, 100) != HAL_OK);
-	while (HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, prom, 2, 100) != HAL_OK);
+	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &PROM_READ_C5_MS5611, 1, operation_time) != HAL_OK);
+	while (HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, prom, 2, operation_time) != HAL_OK);
 	coef[4] = (prom[0] << 8 | prom[1] ) & 0xFFFF;
 
-	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &PROM_READ_C6_MS5611, 1, 100) != HAL_OK);
-	while (HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, prom, 2, 100) != HAL_OK);
+	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &PROM_READ_C6_MS5611, 1, operation_time) != HAL_OK);
+	while (HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, prom, 2, operation_time) != HAL_OK);
 	coef[5] = (prom[0] << 8 | prom[1] ) & 0xFFFF;
 
 }
 
-void set_OSR_MS5611(I2C_HandleTypeDef* hi2c1, uint8_t* OSR)
+void set_OSR_MS5611(I2C_HandleTypeDef* hi2c1, uint8_t OSR)
 {
-	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, OSR, 1, 100)!= HAL_OK);
+	while (HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &OSR, 1, operation_time)!= HAL_OK);
 }
 
 void read_ADC_MS5611(I2C_HandleTypeDef* hi2c1, uint32_t* data)
@@ -115,12 +124,21 @@ void read_ADC_MS5611(I2C_HandleTypeDef* hi2c1, uint32_t* data)
 
 	uint8_t raw[3];
 
-	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &ADCREAD_MS5611, 1, 100)!= HAL_OK);
-	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, raw,3, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MS5611, &ADCREAD_MS5611, 1, operation_time)!= HAL_OK);
+	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_MS5611, raw,3, operation_time)!= HAL_OK);
 
-	data[0] = raw[2] << 16 | raw[1] << 8 | raw[0];
+	data[0] = raw[0] << 16 | raw[1] << 8 | raw[2];
 
 }
+
+void congifurate_MPU6050(I2C_HandleTypeDef* hi2c1)
+{
+	wake_MPU6050(hi2c1);
+	set_gyroscope_rate_sampling_MPU6050(hi2c1, 0x00);
+	set_gyroscope_MPU6050(hi2c1, 0x00);
+	set_accelerometer_MPU6050(hi2c1, 0x00);
+}
+
 
 void wake_MPU6050(I2C_HandleTypeDef* hi2c1)
 {
@@ -129,7 +147,7 @@ void wake_MPU6050(I2C_HandleTypeDef* hi2c1)
 	d[0] = PWR_MGMT_1_MPU6050;
 	d[1] = 0x00;
 
-	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, (uint8_t *)d, 2, 100) != HAL_OK);
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, (uint8_t *)d, 2, operation_time) != HAL_OK);
 }
 
 void set_gyroscope_rate_sampling_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t rate)
@@ -138,19 +156,19 @@ void set_gyroscope_rate_sampling_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t rate)
 	d[0] = SMPLRT_DIV_MPU6050;
 	d[1] = rate;
 
-	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050,(uint8_t *)d,2, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050,(uint8_t *)d,2, operation_time)!= HAL_OK);
 }
 
 void set_gyroscope_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t sensity)
 {
 	uint8_t temp;
 
-	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &GYRO_CONFIG_MPU6050, 1, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &GYRO_CONFIG_MPU6050, 1, operation_time)!= HAL_OK);
 
-	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_MPU6050, &temp, 1, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_MPU6050, &temp, 1, operation_time)!= HAL_OK);
 
 	temp = (temp & 0xE7) | sensity << 3;
-	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &temp, 1, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &temp, 1, operation_time)!= HAL_OK);
 
 }
 
@@ -158,24 +176,22 @@ void set_accelerometer_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t sensity)
 {
 	uint8_t temp;
 
-	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &ACCEL_CONFIG_MPU6050, 1, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &ACCEL_CONFIG_MPU6050, 1, operation_time)!= HAL_OK);
 
-	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_MPU6050, &temp, 1, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_MPU6050, &temp, 1, operation_time)!= HAL_OK);
 
 	temp = (temp & 0xE7) | sensity << 3;
-	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &temp, 1, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &temp, 1, operation_time)!= HAL_OK);
 
 }
 
 void read_accelerometer_MPU6050(I2C_HandleTypeDef* hi2c1, int16_t* acc)
 {
-	HAL_StatusTypeDef st;
-
 	uint8_t data[6];
 
-	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &ACCEL_XOUT_H_MPU6050, 1, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &ACCEL_XOUT_H_MPU6050, 1, operation_time)!= HAL_OK);
 
-	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_MPU6050, data, 6, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_MPU6050, data, 6, operation_time)!= HAL_OK);
 
 	acc[0] = (int16_t)(data[0] << 8 | data[1]);
 	acc[1] = (int16_t)(data[2] << 8 | data[3]);
@@ -189,9 +205,9 @@ void read_gyroscope_MPU6050(I2C_HandleTypeDef* hi2c1, int16_t* gyro)
 
 	uint8_t data[6];
 
-	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &GYRO_XOUT_H_MPU6050, 1, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &GYRO_XOUT_H_MPU6050, 1, operation_time)!= HAL_OK);
 
-	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_MPU6050, data, 6, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_MPU6050, data, 6, operation_time)!= HAL_OK);
 
 	gyro[0] = (int16_t)(data[0] << 8 | data[1]);
 	gyro[1] = (int16_t)(data[2] << 8 | data[3]);
@@ -201,16 +217,13 @@ void read_gyroscope_MPU6050(I2C_HandleTypeDef* hi2c1, int16_t* gyro)
 
 void read_temperature_MPU6050(I2C_HandleTypeDef* hi2c1, float* temp)
 {
-	HAL_StatusTypeDef st;
-
 	uint8_t data[2];
 
-	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &TEMP_OUT_H_MPU6050, 1, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_MPU6050, &TEMP_OUT_H_MPU6050, 1, operation_time)!= HAL_OK);
 
-	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_MPU6050, data, 2, 100)!= HAL_OK);
+	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_MPU6050, data, 2, operation_time)!= HAL_OK);
 
 	temp[0] = (float)((int16_t)(data[0] << 8 | data[1]) / (float)340.0 + (float)36.53);
-
 }
 
 
@@ -251,4 +264,75 @@ void read_interrupts_MPU6050(I2C_HandleTypeDef* hi2c1, uint8_t* read)
 
 }
 
+void congifurate_HMC5883L(I2C_HandleTypeDef* hi2c1)
+{
+	set_operating_mode_HMC5883L(hi2c1, 0x00);
+	set_data_output_rate_HMC5883L(hi2c1, 0x04);
+	set_data_output_range_HMC5883L(hi2c1, 0x01);
+}
+
+void set_data_output_rate_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t rate)
+{
+	uint8_t reg;
+
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_HMC5883L, &CONF_A_HMC5883L, 1, operation_time)!= HAL_OK);
+
+	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_HMC5883L, &reg, 1, operation_time)!= HAL_OK);
+
+	reg = (reg & 0xE3) | rate << 2;
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_HMC5883L, &reg, 1, operation_time)!= HAL_OK);
+
+}
+
+void set_data_output_range_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t range)
+{
+	uint8_t reg;
+
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_HMC5883L, &CONF_B_HMC5883L, 1, operation_time)!= HAL_OK);
+
+	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_HMC5883L, &reg, 1, operation_time)!= HAL_OK);
+
+	reg = (reg & 0x1F) | range << 5;
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_HMC5883L, &reg, 1, operation_time)!= HAL_OK);
+}
+
+void set_operating_mode_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t mode)
+{
+	uint8_t reg;
+
+	HAL_StatusTypeDef st = HAL_I2C_Master_Transmit(hi2c1, ADDRESS_HMC5883L, &MODE_HMC5883L, 1, operation_time);
+
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_HMC5883L, &MODE_HMC5883L, 1, operation_time)!= HAL_OK);
+
+	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_HMC5883L, &reg, 1, operation_time)!= HAL_OK);
+
+	reg = (reg & 0xFC) | mode;
+
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_HMC5883L, &reg, 1, operation_time)!= HAL_OK);
+
+}
+
+void read_data_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t* mag)
+{
+	uint8_t data[6];
+
+	HAL_StatusTypeDef st =HAL_I2C_IsDeviceReady(hi2c1, ADDRESS_HMC5883L, 5, operation_time);
+
+	 st = HAL_I2C_Master_Transmit(hi2c1, ADDRESS_HMC5883L, &MAG_XOUT_H_HMC5883L, 1, operation_time);
+
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_HMC5883L, &MAG_XOUT_H_HMC5883L, 1, operation_time)!= HAL_OK);
+
+	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_HMC5883L, data, 6, operation_time)!= HAL_OK);
+
+	mag[0] = (int16_t)(data[0] << 8 | data[1]);
+	mag[1] = (int16_t)(data[2] << 8 | data[3]);
+	mag[2] = (int16_t)(data[4] << 8 | data[5]);
+}
+
+void read_status_HMC5883L(I2C_HandleTypeDef* hi2c1, uint8_t* status)
+{
+	while(HAL_I2C_Master_Transmit(hi2c1, ADDRESS_HMC5883L, &MAG_XOUT_H_HMC5883L, 1, operation_time)!= HAL_OK);
+
+	while(HAL_I2C_Master_Receive(hi2c1, ADDRESS_HMC5883L, status, 6, operation_time)!= HAL_OK);
+}
 
