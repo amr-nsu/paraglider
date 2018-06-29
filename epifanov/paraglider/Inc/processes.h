@@ -12,10 +12,9 @@ extern UART_HandleTypeDef huart3;
 extern TIM_HandleTypeDef htim2;
 
 
-extern uint8_t bufferRemoteControl[25];
-extern uint16_t channels[16];
 extern uint8_t data[50];
 extern uint16_t ADCData[3];
+uint16_t* channel;
 
 void SensorTask(void * args);
 

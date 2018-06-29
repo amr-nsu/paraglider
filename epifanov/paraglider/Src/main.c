@@ -72,8 +72,6 @@ DMA_HandleTypeDef hdma_usart1_tx;
 DMA_HandleTypeDef hdma_usart3_tx;
 
 uint8_t data[50];
-uint8_t bufferRemoteControl[25];
-uint16_t channels[16];
 uint16_t ADCData[3];
 
 osThreadId tempretureSensorTaskHandle;
@@ -181,19 +179,19 @@ int main(void)
 //  osThreadDef(temreture, TempretureSensorTask, osPriorityNormal, 0, 128);
 //  tempretureSensorTaskHandle = osThreadCreate(osThread(temreture), NULL);
 
-  osThreadDef(computerTransmitter, ComputerTransmitterTask, osPriorityNormal, 0, 128);
+  osThreadDef(computerTransmitter, ComputerTransmitterTask, osPriorityNormal, 0, 32);
   computerTransmitterTaskHandle = osThreadCreate(osThread(computerTransmitter), NULL);
-//
-//  osThreadDef(PWMGenerator, PWMManagerTask, osPriorityNormal, 0, 10);
-//  PWMManagerTaskHandle = osThreadCreate(osThread(PWMGenerator), NULL);
-//
-//  osThreadDef(remoteControlReceiver, RemoteControlReceiverTask, osPriorityNormal, 0, 26);
-//  remoteControlReceiverTaskHandle = osThreadCreate(osThread(remoteControlReceiver), NULL);
-//
-//  osThreadDef(ADCConvertor, ADCManagerTask, osPriorityNormal, 0, 1);
-//  ADCManagerTaskHandle = osThreadCreate(osThread(ADCConvertor), NULL);
 
-  osThreadDef(Sensors, SensorTask, osPriorityNormal, 0, 128);
+  osThreadDef(PWMGenerator, PWMManagerTask, osPriorityNormal, 0, 32);
+  PWMManagerTaskHandle = osThreadCreate(osThread(PWMGenerator), NULL);
+
+  osThreadDef(remoteControlReceiver, RemoteControlReceiverTask, osPriorityNormal, 0, 32);
+  remoteControlReceiverTaskHandle = osThreadCreate(osThread(remoteControlReceiver), NULL);
+
+  osThreadDef(ADCConvertor, ADCManagerTask, osPriorityNormal, 0, 32);
+  ADCManagerTaskHandle = osThreadCreate(osThread(ADCConvertor), NULL);
+
+  osThreadDef(Sensors, SensorTask, osPriorityNormal, 0, 32);
   sensorTaskHandle = osThreadCreate(osThread(Sensors), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */

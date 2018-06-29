@@ -8,6 +8,7 @@ C_SRCS += \
 ../Src/gy86.c \
 ../Src/main.c \
 ../Src/processes.c \
+../Src/sbus.c \
 ../Src/stm32f1xx_hal_msp.c \
 ../Src/stm32f1xx_hal_timebase_TIM.c \
 ../Src/stm32f1xx_it.c \
@@ -18,6 +19,7 @@ OBJS += \
 ./Src/gy86.o \
 ./Src/main.o \
 ./Src/processes.o \
+./Src/sbus.o \
 ./Src/stm32f1xx_hal_msp.o \
 ./Src/stm32f1xx_hal_timebase_TIM.o \
 ./Src/stm32f1xx_it.o \
@@ -28,6 +30,7 @@ C_DEPS += \
 ./Src/gy86.d \
 ./Src/main.d \
 ./Src/processes.d \
+./Src/sbus.d \
 ./Src/stm32f1xx_hal_msp.d \
 ./Src/stm32f1xx_hal_timebase_TIM.d \
 ./Src/stm32f1xx_it.d \
